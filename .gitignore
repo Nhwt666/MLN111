@@ -1,0 +1,42 @@
+## .NET
+bin/
+obj/
+out/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.cache
+*.dll
+*.exe
+*.pdb
+*.log
+
+## Visual Studio / Rider / Cursor
+.vs/
+.idea/
+*.rsuser
+*.DotSettings.user
+
+## User secrets & local config (khong push len GitHub)
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+secrets.json
+.env
+.env.*
+!.env.example
+
+## Docker local overrides
+docker-compose.override.yml
+
+## OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+## Agent / tooling
+agent-tools/
+*.http.env

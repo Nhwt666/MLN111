@@ -1,0 +1,8 @@
+# Chay kem: docker compose -f docker-compose.yml -f docker-compose.local.yml --profile local-db up --build
+services:
+  api:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Database: Host=postgres;Port=5432;Database=${POSTGRES_DB:-mln111};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}

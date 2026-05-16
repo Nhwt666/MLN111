@@ -1,0 +1,58 @@
+@MLN111_HostAddress = http://localhost:5196
+@token = 
+
+### Health
+GET {{MLN111_HostAddress}}/api/health/database
+
+### Register (user thuong)
+POST {{MLN111_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@demo.local",
+  "displayName": "Sinh vien Demo",
+  "password": "123456",
+  "confirmPassword": "123456"
+}
+
+### Login admin (seed khi app chay lan dau)
+POST {{MLN111_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@mln111.local",
+  "password": "Admin@123456"
+}
+
+### Me
+GET {{MLN111_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Tao phong quiz (Admin)
+POST {{MLN111_HostAddress}}/api/quiz/rooms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Giai cap va dan toc - Demo",
+  "description": "Chuong 3 MLN",
+  "secondsPerQuestion": 20
+}
+
+### State phong (poll dong bo)
+GET {{MLN111_HostAddress}}/api/quiz/rooms/{roomId}/state
+
+### Leaderboard
+GET {{MLN111_HostAddress}}/api/quiz/rooms/{roomId}/leaderboard
+
+### AI - trang thai (co ApiKey chua)
+GET {{MLN111_HostAddress}}/api/ai/status
+
+### AI - GPT-5-nano (JWT + OpenAI ApiKey trong Ai:ApiKey hoac OPENAI_API_KEY)
+POST {{MLN111_HostAddress}}/api/ai/chat
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "message": "Giai thich ngan ve dau tranh giai cap theo quan diem Mac?"
+}

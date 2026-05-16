@@ -1,0 +1,57 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${DOCKER_IMAGE:-mln111-api}:${DOCKER_TAG:-latest}
+    container_name: mln111-api
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ENABLE_SWAGGER: ${ENABLE_SWAGGER:-true}
+      ConnectionStrings__Database: ${ConnectionStrings__Database}
+      Jwt__Key: ${Jwt__Key}
+      Jwt__Issuer: ${Jwt__Issuer:-MLN111}
+      Jwt__Audience: ${Jwt__Audience:-MLN111}
+      Ai__Provider: ${Ai__Provider:-OpenAI}
+      Ai__Model: ${Ai__Model:-gpt-5-nano}
+      Ai__ApiKey: ${OPENAI_API_KEY:-}
+      Ai__Enabled: ${Ai__Enabled:-true}
+      Cors__AllowAnyOrigin: ${Cors__AllowAnyOrigin:-true}
+      Seed__AdminEmail: ${Seed__AdminEmail:-admin@mln111.local}
+      Seed__AdminPassword: ${Seed__AdminPassword:-Admin@123456}
+      Seed__AdminDisplayName: ${Seed__AdminDisplayName:-Admin MLN111}
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/api/health/database"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+  postgres:
+    profiles: ["local-db"]
+    image: postgres:16-alpine
+    container_name: mln111-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mln111}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - mln111_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mln111"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  mln111_pg_data:
